@@ -42,31 +42,32 @@
     The dwelling is compliant with the calculation method if its heat loss is less than or equal to the reference dwelling heat loss.</p>
     <br>
     <div class="row">
-        <div class="col-5">
+        <div class="col-4">
             <label style="padding-left: 15px" for="pickAuthority">Territorial Authority</label>
             <select class="form-control" name="pickAuthority" id="pickAuthority">
             </select>
         </div>
-        <div class="col-3">
+        <div class="col-2">
             <div>
                 <label style="text-align: center" for="climateZone">Climate Zone</label>
                 <input class="form-control" readonly style="text-align: center; width: 150px;" id="climateZone"></input>
             </div>
         </div>
-        <div class="col-4">
+        <div class="col-2">
             <div>
                 <button id="addElement" style="margin-top: 30px" class="float-right btn btn-secondary">+</button>
             </div>
         </div>
     </div>
 
-    <div class="Row">
-        <div style="display: table; padding: 0px">
-            <table class="table table-striped table-bordered">
+    <div class="row">
+        <div class="col-lg-8" style="display: table; padding: 15px">
+            <div>
+            <table class="table table-striped table-bordered table-sm">
                 <thead>
                     <tr>
                         <th style="border-right: none !important;" colspan="3">Proposed Building</th>
-                        <th style="text-align: right; border-left: none !important;" colspan="1">Total heat loss:</th>
+                        <th style="text-align: right; border-left: none !important;" colspan="1">Total heat loss (W/K):</th>
                         <th style="text-align: right;" id="totalHeatLoss" colspan="2"></th>
                     </tr>
                     <tr>
@@ -116,12 +117,13 @@
                 </tbody>
             </table>
         </div>
-        <div style="display: table; padding: 0px">
-            <table class="table table-striped table-bordered">
+    </div>
+        <div style="display: table; padding: 15px" class="col-lg-4">
+            <table class="table table-striped table-bordered table-sm">
                 <thead>
                     <tr>
                         <th style="border-right: none !important;" colspan="1">Reference Building</th>
-                        <th style="text-align: right; border-left: none !important;" colspan="2">Total heat loss:</th> 
+                        <th style="text-align: right; border-left: none !important;" colspan="2">Total heat loss (W/K):</th> 
                         <th style="text-align: right;" id="refTotalHeatLoss"></th>
                     </tr>
                     <tr>
@@ -353,7 +355,7 @@
             }
             totalHeatLoss += parseFloat(heatLossCell.innerHTML)
         }
-        document.getElementById('totalHeatLoss').innerHTML = totalHeatLoss.toFixed(1) + ' W/K'
+        document.getElementById('totalHeatLoss').innerHTML = totalHeatLoss.toFixed(1)
         
         grossWallArea = windowAreaTotal + wallAreaTotal
         if (windowAreaTotal != 0 && grossWallArea != 0) {
@@ -397,7 +399,7 @@
             }
             refTotalHeatLoss += parseFloat(refHeatLossCell.innerHTML)
         }
-        document.getElementById('refTotalHeatLoss').innerHTML = refTotalHeatLoss.toFixed(1) + ' W/K'
+        document.getElementById('refTotalHeatLoss').innerHTML = refTotalHeatLoss.toFixed(1)
         if (totalHeatLoss <= refTotalHeatLoss) {
             document.getElementById('compliant').innerHTML = 'Yes, the proposed building heat loss is less than the reference heat loss'
         } else {

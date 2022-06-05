@@ -47,7 +47,7 @@
     }
 
     #referenceTable {
-        margin-top: 100px;
+        margin-top: 102px;
     }
     @media (max-width: 1079px) {
         #referenceTable {
@@ -83,7 +83,7 @@
                 </div>
                 <div class="col-2">
                     <div>
-                        <button id="addElement" style="margin-top: 30px" class="float-right btn btn-secondary">+</button>
+                        <button id="addElement" style="margin-top: 40px" class="float-right btn btn-secondary">+</button>
                     </div>
                 </div>
             </div>
@@ -431,9 +431,14 @@
     }
 
     $(document).on('click', '#deleteRow', function() {
-        let rowToDelete = this.parentElement.parentElement
-        rowToDelete.remove()
-        updateRvalues()
+        let tableBody = document.getElementById('tableBody')
+        var rows = tableBody.getElementsByTagName('tr');
+        console.log(rows.length)
+        if (rows.length > 1) {
+            let rowToDelete = this.parentElement.parentElement
+            rowToDelete.remove()
+            updateRvalues()
+        }
     });
 
     function addRow(type) {

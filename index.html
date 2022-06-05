@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+
+<head>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css" integrity="sha384-TX8t27EcRE3e/ihU7zmQxVncDAy5uIKz4rEkgIXeMed4M0jlfIDPvg6uqKI2xXr2" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+</head>
+
+<style>
+    .center {
+        margin: auto;
+        width: 50%;
+        padding-top: 50px;
+        width: 80%;
+    }
+    .table {
+        margin-top: 20px;
+        margin-bottom: 20px;
+        border-width: 10px;
+    }
+    /* Chrome, Safari, Edge, Opera */
+    input::-webkit-outer-spin-button,
+    input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+    }
+
+    /* Firefox */
+    input[type=number] {
+    -moz-appearance: textfield;
+    }
+
+</style>
+
+<div class="container-fluid center">
+    <h2>Building Code H1/AS1 Calculation Method</h2>
+    <p style="width: 70%">Please add your dwelling's areas and R-values in the table below. Note that wall and roof areas are 'net' meaning that the area of any windows must be subtracted.<br>Additional rows can be added with the button at the top-right. Please set the local authority in which the dwelling is to be constructed below. The climate zone will be looked up automatically.<br>
+    The dwelling is compliant with the calculation method if its heat loss is less than or equal to the reference dwelling heat loss.</p>
+    <br>
+    <div class="row">
+        <div class="col-5">
+            <label style="padding-left: 15px" for="pickAuthority">Territorial Authority</label>
+            <select class="form-control" name="pickAuthority" id="pickAuthority">
+            </select>
+        </div>
+        <div class="col-3">
+            <div>
+                <label style="text-align: center" for="climateZone">Climate Zone</label>
+                <input class="form-control" readonly style="text-align: center; width: 150px;" id="climateZone"></input>
+            </div>
+        </div>
+        <div class="col-4">
+            <div>
+                <button id="addElement" style="margin-top: 30px" class="float-right btn btn-secondary">+</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="Row">
+        <div style="display: table; padding: 0px">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="border-right: none !important;" colspan="3">Proposed Building</th>
+                        <th style="text-align: right; border-left: none !important;" colspan="1">Total heat loss:</th>
+                        <th style="text-align: right;" id="totalHeatLoss" colspan="2"></th>
+                    </tr>
+                    <tr>
+                        <th style="text-align: right; border-left: none !important;" colspan="4">Window to wall ratio:</th> 
+                        <th style="text-align: right;" id="windowToWallRatio" colspan="2"></th>
+                    </tr>
+                    <tr>
+                        <th style="vertical-align: top; text-align: right; border-left: none !important;" colspan="4">Compliant:</th> 
+                        <th style="text-align: right; width: 300px;" id="compliant" colspan="2"></th>
+                    </tr>
+
+                    <tr>
+                        <th>Building element type</th>
+                        <th>Description</th>
+                        <th style="text-align: right;">Net area (m2)</th>
+                        <th style="text-align: right;">R-value</th>
+                        <th style="text-align: right;">Heat loss (W/K)</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody id="tableBody">
+                    <tr>
+                        <td>
+                            <select class="form-control elementType">
+                                <option>Wall</option>
+                                <option>Roof</option>
+                                <option>Slab-on-ground floor</option>
+                                <option>Floor other than slab-on-ground</option>
+                                <option>Window or door</option>
+                                <option>Skylight</option>
+                            </select>
+                        </td>
+                        <td>
+                            <input placeholder='optional description' class="form-control"></input>
+                        </td>
+                        <td>
+                            <input type="number" min=0 style="text-align: right;" value=0.0 class="form-control proposedArea"></input>
+                        </td>
+                        <td>
+                            <input type="number" min=0 style="text-align: right;" value=0.0 class="form-control proposedRvalue"></input>
+                        </td>
+                        <td class="heatLossCell" style="text-align: right; padding-top: 20px;"></td>
+                        <td>
+                            <button style="display:block; margin: auto;" id="deleteRow" class="btn btn-secondary">-</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <div style="display: table; padding: 0px">
+            <table class="table table-striped table-bordered">
+                <thead>
+                    <tr>
+                        <th style="border-right: none !important;" colspan="1">Reference Building</th>
+                        <th style="text-align: right; border-left: none !important;" colspan="2">Total heat loss:</th> 
+                        <th style="text-align: right;" id="refTotalHeatLoss"></th>
+                    </tr>
+                    <tr>
+                        <th>Building element type</th>
+                        <th style="text-align: right;">Net area (m2)</th>
+                        <th style="text-align: right;">R-value</th>
+                        <th style="text-align: right;">Heat loss (W/K)</th>
+                    </tr>
+                </thead>
+                <tbody id="refTableBody">
+                    <tr>
+                        <td class="elementType">Wall</td>
+                        <td style="text-align: right;" class="referenceArea"></td>
+                        <td style="text-align: right;" class="referenceRvalue"></td>
+                        <td style="text-align: right;" class="refHeatLossCell"></td>
+                    </tr>
+                    <tr>
+                        <td class="elementType">Roof</td>
+                        <td style="text-align: right;" class="referenceArea"></td>
+                        <td style="text-align: right;" class="referenceRvalue"></td>
+                        <td style="text-align: right;" class="refHeatLossCell"></td>
+                    </tr>
+                    <tr>
+                        <td class="elementType">Slab-on-ground floor</td>
+                        <td style="text-align: right;" class="referenceArea"></td>
+                        <td style="text-align: right;" class="referenceRvalue"></td>
+                        <td style="text-align: right;" class="refHeatLossCell"></td>
+                    </tr>
+                    <tr>
+                        <td class="elementType">Floor other than slab-on-ground</td>
+                        <td style="text-align: right;" class="referenceArea"></td>
+                        <td style="text-align: right;" class="referenceRvalue"></td>
+                        <td style="text-align: right;" class="refHeatLossCell"></td>
+                    </tr>       
+                    <tr>
+                        <td class="elementType">Window or door</td>
+                        <td style="text-align: right;" class="referenceArea"></td>
+                        <td style="text-align: right;" class="referenceRvalue"></td>
+                        <td style="text-align: right;" class="refHeatLossCell"></td>
+                    </tr>                    
+             
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+</div>
+    
+<script>
+    let climateZoneData = {
+        'Ashburton District Council': '5', 
+        'Auckland Council': '1', 
+        'Buller District Council': '4', 
+        'Carterton District Council': '4', 
+        "Central Hawke’s Bay District Council": '2', 
+        'Central Otago District Council': '6', 
+        'Chatham Islands Council': '3', 
+        'Christchurch City Council': '5', 
+        'Clutha District Council': '5', 
+        'Dunedin City Council': '5', 
+        'Far North District Council': '1', 
+        'Gisborne District Council': '2', 
+        'Gore District Council': '6', 
+        'Grey District Council': '4', 
+        'Hamilton City Council': '2', 
+        'Hastings District Council': '2', 
+        'Hauraki District Council': '2', 
+        'Horowhenua District Council': '3', 
+        'Hurunui District Council': '5', 
+        'Hutt City Council': '6', 
+        'Invercargill City Council': '3', 
+        'Kaikōura District Council': '1', 
+        'Kaipara District Council': '3', 
+        'Kapiti Coast District Council': '1', 
+        'Kawerau District Council': '3', 
+        'Mackenzie District Council': '6', 
+        'Manawatu District Council': '3', 
+        'Marlborough District Council': '3', 
+        'Masterton District Council': '4', 
+        'Matamata–Piako District Council': '2', 
+        'Napier City Council': '2', 
+        'Nelson City Council': '3', 
+        'New Plymouth District Council': '2', 
+        'Ōpōtiki District Council': '1', 
+        'Otorohanga District Council': '2', 
+        'Palmerston North City Council': '3', 
+        'Porirua City Council': '3', 
+        'Queenstown–Lakes District Council': '6', 
+        "Rangitikei District Council (north of 39o50'S (-39.83))": '4', 
+        "Rangitikei District Council (south of 39o50'S (-39.83))": '3', 
+        'Rotorua District Council': '4', 
+        'Ruapehu District Council': '4', 
+        'Selwyn District Council': '5', 
+        'South Taranaki District Council': '2', 
+        'South Waikato District Council': '2', 
+        'South Wairarapa District Council': '4', 
+        'Southland District Council': '6', 
+        'Stratford District Council': '2', 
+        'Tararua District Council': '4', 
+        'Tasman District Council': '3', 
+        'Taupō District Council': '4', 
+        'Tauranga City Council': '1', 
+        'Thames–Coromandel District Council': '1', 
+        'Timaru District Council': '5', 
+        'Upper Hutt City Council': '4', 
+        'Waikato District Council': '2', 
+        'Waimakariri District Council': '5', 
+        'Waimate District Council': '5', 
+        'Waipa District Council': '2', 
+        'Wairoa District Council': '2', 
+        'Waitaki District (true left of the Otekaieke river)': '6', 
+        'Waitaki District (true right of the Otekaieke river)': '5', 
+        'Waitomo District Council': '2', 
+        'Wellington City Council': '3', 
+        'Western Bay of Plenty District Council': '1', 
+        'Westland District Council': '4', 
+        'Whakatane District Council': '1', 
+        'Whanganui District Council': '2', 
+        'Whangarei District Council': '1'
+    }
+
+
+    let mbieRvalues = {
+        'Wall': {
+            1: 2.0,
+            2: 2.0,
+            3: 2.0,
+            4: 2.0,
+            5: 2.0,
+            6: 2.0,
+        },
+        'Roof': {
+            1: 6.6,
+            2: 6.6,
+            3: 6.6,
+            4: 6.6,
+            5: 6.6,
+            6: 6.6,
+        },
+        'Slab-on-ground floor': {
+            1: 1.5,
+            2: 1.5,
+            3: 1.5,
+            4: 1.5,
+            5: 1.6,
+            6: 1.7,
+        },
+        'Floor other than slab-on-ground': {
+            1: 2.5,
+            2: 2.5,
+            3: 2.5,
+            4: 2.8,
+            5: 3.0,
+            6: 3.0,
+        },
+        'Window or door': {
+            1: 0.37,
+            2: 0.37,
+            3: 0.46,
+            4: 0.46,
+            5: 0.50,
+            6: 0.50,
+        },
+        'Skylight': {
+            1: 'N/A',
+            2: 'N/A',
+            3: 'N/A',
+            4: 'N/A',
+            5: 'N/A',
+            6: 'N/A',
+        }
+    }
+
+    let territorialAuthorities = Object.keys(climateZoneData)
+    let authorityList = document.getElementById('pickAuthority')
+
+    for (let i = 0; i < territorialAuthorities.length; i++) {
+        authorityList.innerHTML += "<option>" + territorialAuthorities[i] + "</option>"
+    }
+
+
+    let tableBody = document.getElementById('tableBody')                
+
+    function updateRvalues() {
+    
+        let climateZone = climateZoneData[document.getElementById('pickAuthority').value]
+        let tableBody = document.getElementById('tableBody')
+        let refTableBody = document.getElementById('refTableBody')
+        var windowAreaTotal = 0.0
+        var wallAreaTotal = 0.0
+        var grossWallArea = 0.0
+        var roofAreaTotal = 0.0
+        var skylightAreaTotal = 0.0
+        var slabAreaTotal = 0.0
+        var nonSlabAreaTotal = 0.0
+        var totalHeatLoss = 0.0
+        var refTotalHeatLoss = 0.0
+    
+        document.getElementById('climateZone').value = climateZone;
+    
+        for (let i = 0, row; row = tableBody.rows[i]; i++) {
+            let proposedRvalue = row.querySelector('.proposedRvalue').value
+            let proposedArea = row.querySelector('.proposedArea').value
+            let heatLossCell = row.querySelector('.heatLossCell')
+            let elementType = row.querySelector('.elementType');
+            if (proposedArea != 0 && proposedRvalue != 0) {
+                heatLossCell.innerHTML = (proposedArea / proposedRvalue).toFixed(1)
+            }
+            else {
+                heatLossCell.innerHTML = 0.0
+            }
+            if (elementType.value == 'Window or door') {
+                windowAreaTotal += parseFloat(row.querySelector('.proposedArea').value)
+            }
+            if (elementType.value == 'Wall') {
+                wallAreaTotal += parseFloat(row.querySelector('.proposedArea').value)
+            }
+            if (elementType.value == 'Roof') {
+                roofAreaTotal += parseFloat(row.querySelector('.proposedArea').value)
+            }
+            if (elementType.value == 'Slab-on-ground floor') {
+                slabAreaTotal += parseFloat(row.querySelector('.proposedArea').value)
+            }
+            if (elementType.value == 'Floor other than slab-on-ground') {
+                nonSlabAreaTotal += parseFloat(row.querySelector('.proposedArea').value)
+            }
+            if (elementType.value == 'Skylight') {
+                skylightAreaTotal += parseFloat(row.querySelector('.proposedArea').value)
+            }
+            totalHeatLoss += parseFloat(heatLossCell.innerHTML)
+        }
+        document.getElementById('totalHeatLoss').innerHTML = totalHeatLoss.toFixed(1) + ' W/K'
+        
+        grossWallArea = windowAreaTotal + wallAreaTotal
+        if (windowAreaTotal != 0 && grossWallArea != 0) {
+            windowToWallRatio = (windowAreaTotal / grossWallArea) * 100
+        } else {
+            windowToWallRatio = 0
+        }
+        
+        document.getElementById('windowToWallRatio').innerHTML = windowToWallRatio.toFixed(1) + '%' 
+        
+        for (let i = 0, row; row = refTableBody.rows[i]; i++) {
+            let elementType = row.querySelector('.elementType');
+            let referenceRvalueCell = row.querySelector('.referenceRvalue');
+            let referenceRvalue = mbieRvalues[elementType.innerHTML][climateZone]
+    
+            referenceRvalueCell.innerHTML = referenceRvalue
+    
+            if (elementType.innerHTML == 'Window or door') {
+                row.querySelector('.referenceArea').innerHTML = (grossWallArea * 0.3).toFixed(1);
+            }
+            if (elementType.innerHTML == 'Wall') {
+                row.querySelector('.referenceArea').innerHTML = (grossWallArea * 0.7).toFixed(1);
+            }
+            if (elementType.innerHTML == 'Roof') {
+                row.querySelector('.referenceArea').innerHTML = (roofAreaTotal + skylightAreaTotal).toFixed(1);
+            }
+            if (elementType.innerHTML == 'Slab-on-ground floor') {
+                row.querySelector('.referenceArea').innerHTML = slabAreaTotal.toFixed(1);
+            }
+            if (elementType.innerHTML == 'Floor other than slab-on-ground') {
+                row.querySelector('.referenceArea').innerHTML = nonSlabAreaTotal.toFixed(1);
+            }
+
+            let referenceArea = row.querySelector('.referenceArea').innerHTML
+            let refHeatLossCell = row.querySelector('.refHeatLossCell')
+            if (referenceArea != 0 && referenceRvalue != 0) {
+                refHeatLossCell.innerHTML = (referenceArea / referenceRvalue).toFixed(1)
+            }
+            else {
+                refHeatLossCell.innerHTML = (0).toFixed(1)
+            }
+            refTotalHeatLoss += parseFloat(refHeatLossCell.innerHTML)
+        }
+        document.getElementById('refTotalHeatLoss').innerHTML = refTotalHeatLoss.toFixed(1) + ' W/K'
+        if (totalHeatLoss <= refTotalHeatLoss) {
+            document.getElementById('compliant').innerHTML = 'Yes, the proposed building heat loss is less than the reference heat loss'
+        } else {
+            document.getElementById('compliant').innerHTML = 'No, the proposed building heat loss is greater than the reference heat loss'
+        }       
+    }
+
+    $(document).on('click', '#deleteRow', function() {
+        let rowToDelete = this.parentElement.parentElement
+        rowToDelete.remove()
+        updateRvalues()
+    });
+
+    function addRow(type) {
+        let tableBody = document.getElementById('tableBody')
+        var rows = tableBody.getElementsByTagName('tr');
+        var clone = cloneEl(rows[rows.length - 1]);
+        clone.querySelector('.elementType').value = type      
+        tableBody.appendChild(clone);
+    }
+
+    function cloneEl(el) {
+    var clo = el.cloneNode(true);
+    return clo;
+    }
+
+    const startUpElements = [
+        'Roof',
+        'Slab-on-ground floor',
+        'Window or door',
+    ]
+
+    for (let i = 0; i < 3; i++) {
+        addRow(startUpElements[i])
+    }
+
+    updateRvalues()
+
+    $(document).on('click', '#addElement', function() {
+        addRow('Wall')
+        updateRvalues()
+    })
+
+    $(document).on('click', '.elementType', function() {
+        updateRvalues()
+    })
+
+    $(document).on('change', '.proposedRvalue, .proposedArea, #pickAuthority', function() {
+        updateRvalues();
+    });
+
+</script>

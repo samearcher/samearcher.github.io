@@ -14,7 +14,7 @@
     .center {
         margin: auto;
         width: 50%;
-        padding-top: 50px;
+        padding-top: 20px;
         width: 80%;
     }
     .table {
@@ -128,7 +128,7 @@
                             </select>
                         </td>
                         <td>
-                            <input placeholder='Optional description' class="form-control"></input>
+                            <input id='description' placeholder='Optional' class="form-control"></input>
                         </td>
                         <td>
                             <input type="number" min=0 style="text-align: right;" value=0.0 class="form-control proposedArea"></input>
@@ -448,7 +448,11 @@
         let tableBody = document.getElementById('tableBody')
         var rows = tableBody.getElementsByTagName('tr');
         var clone = cloneEl(rows[rows.length - 1]);
-        clone.querySelector('.elementType').value = type      
+        clone.querySelector('.elementType').value = type
+        clone.querySelector('#description').value = ''
+        clone.querySelector('#description').placeholder = "Optional"
+        clone.querySelector('.proposedArea').value = (0.0).toFixed(1)
+        clone.querySelector('.proposedRvalue').value = 0.0.toFixed(1)      
         tableBody.appendChild(clone);
     }
 

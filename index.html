@@ -426,11 +426,15 @@
             refTotalHeatLoss += parseFloat(refHeatLossCell.innerHTML)
         }
         document.getElementById('refTotalHeatLoss').innerHTML = refTotalHeatLoss.toFixed(1)
-        if (totalHeatLoss <= refTotalHeatLoss) {
-            document.getElementById('compliant').innerHTML = 'Yes, the proposed building heat loss is less than the reference heat loss'
+        if (windowToWallRatio > 40) {
+            document.getElementById('compliant').innerHTML = 'N/A. The window-to-wall ratio must be less than 40%.'
         } else {
+            if (totalHeatLoss <= refTotalHeatLoss) {
+                document.getElementById('compliant').innerHTML = 'Yes, the proposed building heat loss is less than the reference heat loss'
+            } else {
             document.getElementById('compliant').innerHTML = 'No, the proposed building heat loss is greater than the reference heat loss'
-        }       
+            }       
+        }
     }
 
     $(document).on('click', '#deleteRow', function() {

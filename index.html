@@ -11,6 +11,9 @@
 </head>
 
 <style>
+    .heatLossCell, .refHeatLossCell, .referenceArea {
+        display: none;
+    }
     .form-check {
         display: flex;
         align-items: center;
@@ -137,7 +140,8 @@
                                 <option>Roof</option>
                                 <option>Slab-on-ground floor</option>
                                 <option>Floor other than slab-on-ground</option>
-                                <option>Window or door</option>
+                                <option>Window or glazed door</option>
+                                <option>Opaque door or panel</option>
                                 <option>Skylight</option>
                             </select>
                         </td>
@@ -151,6 +155,7 @@
                             <input type="number" min=0 style="text-align: right;" value=0.0 class="form-control proposedRvalue"></input>
                         </td>
                         <td class="heatLossCell" style="text-align: right; padding-top: 20px;"></td>
+                        <td class="heatLossCellDisp" style="text-align: right; padding-top: 20px;"></td>
                         <td>
                             <button style="margin-top: 5px; display:block; margin-left: auto; margin-right: auto;" id="deleteRow" class="btn btn-secondary">-</button>
                         </td>
@@ -177,32 +182,42 @@
                     <tr>
                         <td class="elementType">Wall</td>
                         <td style="text-align: right;" class="referenceArea"></td>
+                        <td style="text-align: right;" class="referenceAreaDisp"></td>
                         <td style="text-align: right;" class="referenceRvalue"></td>
                         <td style="text-align: right;" class="refHeatLossCell"></td>
+                        <td style="text-align: right;" class="refHeatLossCellDisp"></td>
                     </tr>
                     <tr>
                         <td class="elementType">Roof</td>
                         <td style="text-align: right;" class="referenceArea"></td>
+                        <td style="text-align: right;" class="referenceAreaDisp"></td>
                         <td style="text-align: right;" class="referenceRvalue"></td>
                         <td style="text-align: right;" class="refHeatLossCell"></td>
+                        <td style="text-align: right;" class="refHeatLossCellDisp"></td>
                     </tr>
                     <tr>
                         <td class="elementType">Slab-on-ground floor</td>
                         <td style="text-align: right;" class="referenceArea"></td>
+                        <td style="text-align: right;" class="referenceAreaDisp"></td>
                         <td style="text-align: right;" class="referenceRvalue"></td>
                         <td style="text-align: right;" class="refHeatLossCell"></td>
+                        <td style="text-align: right;" class="refHeatLossCellDisp"></td>
                     </tr>
                     <tr>
                         <td class="elementType">Floor other than slab-on-ground</td>
                         <td style="text-align: right;" class="referenceArea"></td>
+                        <td style="text-align: right;" class="referenceAreaDisp"></td>
                         <td style="text-align: right;" class="referenceRvalue"></td>
                         <td style="text-align: right;" class="refHeatLossCell"></td>
+                        <td style="text-align: right;" class="refHeatLossCellDisp"></td>
                     </tr>       
                     <tr>
-                        <td class="elementType">Window or door</td>
+                        <td class="elementType">Window or glazed door</td>
                         <td style="text-align: right;" class="referenceArea"></td>
+                        <td style="text-align: right;" class="referenceAreaDisp"></td>
                         <td style="text-align: right;" class="referenceRvalue"></td>
                         <td style="text-align: right;" class="refHeatLossCell"></td>
+                        <td style="text-align: right;" class="refHeatLossCellDisp"></td>
                     </tr>                    
              
                 </tbody>
@@ -319,7 +334,15 @@
             5: 3.0,
             6: 3.0,
         },
-        'Window or door': {
+        'Window or glazed door': {
+            1: 0.37,
+            2: 0.37,
+            3: 0.46,
+            4: 0.46,
+            5: 0.50,
+            6: 0.50,
+        },
+        'Opaque door or panel': {
             1: 0.37,
             2: 0.37,
             3: 0.46,
@@ -351,11 +374,15 @@
     function updateRvalues() {
 
         if (document.getElementById('dateConsent').checked) {
-            mbieRvalues['Window or door'][1] = 0.46;
-            mbieRvalues['Window or door'][2] = 0.46;
+            mbieRvalues['Window or glazed door'][1] = 0.46;
+            mbieRvalues['Window or glazed door'][2] = 0.46;
+            mbieRvalues['Opaque door or panel'][1] = 0.46;
+            mbieRvalues['Opaque door or panel'][2] = 0.46;
         } else {
-            mbieRvalues['Window or door'][1] = 0.37;
-            mbieRvalues['Window or door'][2] = 0.37;           
+            mbieRvalues['Window or glazed door'][1] = 0.37;
+            mbieRvalues['Window or glazed door'][2] = 0.37;
+            mbieRvalues['Opaque door or panel'][1] = 0.37;
+            mbieRvalues['Opaque door or panel'][2] = 0.37;           
         }
     
         let climateZone = climateZoneData[document.getElementById('pickAuthority').value]
@@ -370,6 +397,7 @@
         var nonSlabAreaTotal = 0.0
         var totalHeatLoss = 0.0
         var refTotalHeatLoss = 0.0
+        var verticalGlazingArea = 0.0
     
         document.getElementById('climateZone').value = climateZone;
     
@@ -377,16 +405,23 @@
             let proposedRvalue = row.querySelector('.proposedRvalue').value
             let proposedArea = row.querySelector('.proposedArea').value
             let heatLossCell = row.querySelector('.heatLossCell')
+            let heatLossCellDisp = row.querySelector('.heatLossCellDisp')
             let elementType = row.querySelector('.elementType');
             if (proposedArea != 0 && proposedRvalue != 0) {
-                heatLossCell.innerHTML = (proposedArea / proposedRvalue).toFixed(1)
+                heatLossCell.innerHTML = (proposedArea / proposedRvalue)
             }
             else {
                 heatLossCell.innerHTML = 0.0
             }
-            if (elementType.value == 'Window or door') {
+
+            heatLossCellDisp.innerHTML = parseFloat(heatLossCell.innerHTML).toFixed(1)
+            
+            if (elementType.value == 'Window or glazed door' || elementType.value == 'Opaque door or panel') {
                 windowAreaTotal += parseFloat(row.querySelector('.proposedArea').value)
             }
+            if (elementType.value == 'Window or glazed door') {
+                verticalGlazingArea += parseFloat(row.querySelector('.proposedArea').value)
+            }            
             if (elementType.value == 'Wall') {
                 wallAreaTotal += parseFloat(row.querySelector('.proposedArea').value)
             }
@@ -407,8 +442,8 @@
         document.getElementById('totalHeatLoss').innerHTML = totalHeatLoss.toFixed(1)
         
         grossWallArea = windowAreaTotal + wallAreaTotal
-        if (windowAreaTotal != 0 && grossWallArea != 0) {
-            windowToWallRatio = (windowAreaTotal / grossWallArea) * 100
+        if (verticalGlazingArea != 0 && grossWallArea != 0) {
+            windowToWallRatio = (verticalGlazingArea / grossWallArea) * 100
         } else {
             windowToWallRatio = 0
         }
@@ -422,30 +457,40 @@
     
             referenceRvalueCell.innerHTML = referenceRvalue
     
-            if (elementType.innerHTML == 'Window or door') {
-                row.querySelector('.referenceArea').innerHTML = (grossWallArea * 0.3).toFixed(1);
+            if (elementType.innerHTML == 'Window or glazed door') {
+                row.querySelector('.referenceArea').innerHTML = (grossWallArea * 0.3);
+                row.querySelector('.referenceAreaDisp').innerHTML = (grossWallArea * 0.3).toFixed(1);
             }
             if (elementType.innerHTML == 'Wall') {
-                row.querySelector('.referenceArea').innerHTML = (grossWallArea * 0.7).toFixed(1);
+                row.querySelector('.referenceArea').innerHTML = (grossWallArea * 0.7);
+                row.querySelector('.referenceAreaDisp').innerHTML = (grossWallArea * 0.7).toFixed(1);
             }
             if (elementType.innerHTML == 'Roof') {
-                row.querySelector('.referenceArea').innerHTML = (roofAreaTotal + skylightAreaTotal).toFixed(1);
+                row.querySelector('.referenceArea').innerHTML
+                = row.querySelector('.referenceAreaDisp').innerHTML 
+                = (roofAreaTotal + skylightAreaTotal);
             }
             if (elementType.innerHTML == 'Slab-on-ground floor') {
-                row.querySelector('.referenceArea').innerHTML = slabAreaTotal.toFixed(1);
+                row.querySelector('.referenceArea').innerHTML 
+                = row.querySelector('.referenceAreaDisp').innerHTML
+                = slabAreaTotal;
             }
             if (elementType.innerHTML == 'Floor other than slab-on-ground') {
-                row.querySelector('.referenceArea').innerHTML = nonSlabAreaTotal.toFixed(1);
+                row.querySelector('.referenceArea').innerHTML 
+                = row.querySelector('.referenceAreaDisp').innerHTML
+                = nonSlabAreaTotal;
             }
 
             let referenceArea = row.querySelector('.referenceArea').innerHTML
             let refHeatLossCell = row.querySelector('.refHeatLossCell')
+            let refHeatLossCellDisp = row.querySelector('.refHeatLossCellDisp')
             if (referenceArea != 0 && referenceRvalue != 0) {
-                refHeatLossCell.innerHTML = (referenceArea / referenceRvalue).toFixed(1)
+                refHeatLossCell.innerHTML = (referenceArea / referenceRvalue)
             }
             else {
                 refHeatLossCell.innerHTML = (0).toFixed(1)
             }
+            refHeatLossCellDisp.innerHTML = parseFloat(refHeatLossCell.innerHTML).toFixed(1)
             refTotalHeatLoss += parseFloat(refHeatLossCell.innerHTML)
         }
 
@@ -484,7 +529,7 @@
         if (rValueCheck == false) {
             document.getElementById('compliant').innerHTML = 'No. All wall, roof and floor R-values must be at least 50% of the reference R-value.'
         } else {
-            if (windowToWallRatio > 40) {
+            if (verticalGlazingArea > 40) {
                 document.getElementById('compliant').innerHTML = 'N/A. The window-to-wall ratio must be less than 40%.'
             } else {
                 if (totalHeatLoss <= refTotalHeatLoss) {
@@ -527,11 +572,12 @@
     const startUpElements = [
         'Roof',
         'Slab-on-ground floor',
-        'Window or door',
+        'Window or glazed door',
+        'Opaque door or panel',
         'Skylight'
     ]
 
-    for (let i = 0; i < 4; i++) {
+    for (let i = 0; i < 5; i++) {
         addRow(startUpElements[i])
     }
 

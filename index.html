@@ -115,7 +115,7 @@
                         <th style="text-align: right;" id="totalHeatLoss" colspan="2"></th>
                     </tr>
                     <tr>
-                        <th style="text-align: right; border-left: none !important;" colspan="4">Window to wall ratio:</th> 
+                        <th style="text-align: right; border-left: none !important;" colspan="4">Glazing area to total wall area ratio:</th> 
                         <th style="text-align: right;" id="windowToWallRatio" colspan="2"></th>
                     </tr>
                     <tr>
@@ -466,19 +466,16 @@
                 row.querySelector('.referenceAreaDisp').innerHTML = (grossWallArea * 0.7).toFixed(1);
             }
             if (elementType.innerHTML == 'Roof') {
-                row.querySelector('.referenceArea').innerHTML
-                = row.querySelector('.referenceAreaDisp').innerHTML 
-                = (roofAreaTotal + skylightAreaTotal);
+                row.querySelector('.referenceArea').innerHTML = (roofAreaTotal + skylightAreaTotal);
+                row.querySelector('.referenceAreaDisp').innerHTML = (roofAreaTotal + skylightAreaTotal).toFixed(1);
             }
             if (elementType.innerHTML == 'Slab-on-ground floor') {
-                row.querySelector('.referenceArea').innerHTML 
-                = row.querySelector('.referenceAreaDisp').innerHTML
-                = slabAreaTotal;
+                row.querySelector('.referenceArea').innerHTML = slabAreaTotal
+                row.querySelector('.referenceAreaDisp').innerHTML = slabAreaTotal.toFixed(1)
             }
             if (elementType.innerHTML == 'Floor other than slab-on-ground') {
-                row.querySelector('.referenceArea').innerHTML 
-                = row.querySelector('.referenceAreaDisp').innerHTML
-                = nonSlabAreaTotal;
+                row.querySelector('.referenceArea').innerHTML = nonSlabAreaTotal
+                row.querySelector('.referenceAreaDisp').innerHTML = nonSlabAreaTotal.toFixed(1)
             }
 
             let referenceArea = row.querySelector('.referenceArea').innerHTML

@@ -76,8 +76,8 @@
     <h2>Building Code H1/AS1 Calculation Method</h2>
     <div class="row">
         <div class="col-lg-8">
-            <p>This tool implements the calculation method of the H1/AS1 Fifth Edition. Please add your building's envelope areas and R-values in the table below. Note that wall and roof areas are 'net' meaning that the area of any windows, doors and skylights must be subtracted.<br>Additional rows can be added with the button at the top-right. Please set the territorial authority in which the building is to be constructed below. The climate zone will be looked up automatically.<br>
-            The building is compliant with the calculation method if its heat loss is less than or equal to the reference dwelling heat loss.<br>For building elements with embedded heating systems, the minimum construction R-values shall be determined through the Schedule method. These apply whenever building elements that are part of the thermal envelope include heating systems and may not be reduced by applying the Calculation method. Refer H1/AS1 2.1.1.3.</p>
+            <p>This tool implements the calculation method of the H1/AS1 Fifth Edition. Please add your building's thermal envelope areas and R-values in the table below. Note that wall and roof areas are 'net' meaning that the area of any windows, doors and skylights must be subtracted.<br>Additional rows can be added with the button at the top-right. Please set the territorial authority in which the building is to be constructed below. The climate zone will be looked up automatically.<br>
+            The building is compliant with the calculation method if its heat loss is less than or equal to the reference building heat loss.<br>For building elements with embedded heating systems, the minimum construction R-values shall be determined through the Schedule method. These apply whenever building elements that are part of the thermal envelope include heating systems and may not be reduced by applying the Calculation method. Refer H1/AS1 2.1.1.3.</p>
         </div>
     </div>
 
@@ -212,7 +212,7 @@
                         <td style="text-align: right;" class="refHeatLossCellDisp"></td>
                     </tr>       
                     <tr>
-                        <td class="elementType">Window or glazed door</td>
+                        <td class="elementType">Window or door</td>
                         <td style="text-align: right;" class="referenceArea"></td>
                         <td style="text-align: right;" class="referenceAreaDisp"></td>
                         <td style="text-align: right;" class="referenceRvalue"></td>
@@ -342,6 +342,14 @@
             5: 0.50,
             6: 0.50,
         },
+        'Window or door': {
+            1: 0.37,
+            2: 0.37,
+            3: 0.46,
+            4: 0.46,
+            5: 0.50,
+            6: 0.50,
+        },
         'Opaque door or panel': {
             1: 0.37,
             2: 0.37,
@@ -457,7 +465,7 @@
     
             referenceRvalueCell.innerHTML = referenceRvalue
     
-            if (elementType.innerHTML == 'Window or glazed door') {
+            if (elementType.innerHTML == 'Window or door') {
                 row.querySelector('.referenceArea').innerHTML = (grossWallArea * 0.3);
                 row.querySelector('.referenceAreaDisp').innerHTML = (grossWallArea * 0.3).toFixed(1);
             }
@@ -526,7 +534,7 @@
         if (rValueCheck == false) {
             document.getElementById('compliant').innerHTML = 'No. All wall, roof and floor R-values must be at least 50% of the reference R-value.'
         } else {
-            if (verticalGlazingArea > 40) {
+            if (windowToWallRatio > 40) {
                 document.getElementById('compliant').innerHTML = 'N/A. The window-to-wall ratio must be less than 40%.'
             } else {
                 if (totalHeatLoss <= refTotalHeatLoss) {

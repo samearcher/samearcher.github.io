@@ -76,7 +76,11 @@
     <h2>Building Code H1/AS1 Calculation Method</h2>
     <div class="row">
         <div class="col-lg-8">
-            <p>This tool implements the calculation method of the H1/AS1 Fifth Edition. Please add your building's thermal envelope areas and R-values in the table below. Note that wall and roof areas are 'net' meaning that the area of any windows, doors and skylights must be subtracted.<br>Additional rows can be added with the button at the top-right. Please set the territorial authority in which the building is to be constructed below. The climate zone will be looked up automatically.<br>
+            <p>This tool implements the calculation method of the H1/AS1 Fifth Edition. Please add your building's thermal envelope areas and R-values in the table below. Note that wall and roof areas are 'net' meaning that the area of any windows, doors and skylights must be subtracted.<br>
+                Additional rows can be added with the button at the top-right. 
+                Please set the territorial authority in which the building is to be constructed below. 
+                The climate zone will be looked up automatically.<br>
+                Please also tick when the building will be submitted for building consent. The new H1 changes are being phased and this changes the required R-values.<br>
             The building is compliant with the calculation method if its heat loss is less than or equal to the reference building heat loss.<br>For building elements with embedded heating systems, the minimum construction R-values shall be determined through the Schedule method. These apply whenever building elements that are part of the thermal envelope include heating systems and may not be reduced by applying the Calculation method. Refer H1/AS1 2.1.1.3.</p>
         </div>
     </div>
@@ -84,29 +88,61 @@
     <div class="row">
         <div class="col-lg-8" style="display: table;">
             <div class="row">
-                <div class="col-6">
+                <div class="col-6" style="display: flex; align-items: flex-end;">
                     <label for="pickAuthority">Territorial Authority</label>
-                    <select class="form-control" name="pickAuthority" id="pickAuthority">
-                    </select>
                 </div>
-                <div class="col-4">
+                <div class="col-2">
                     <div>
-                        <label style="text-align: center" for="climateZone">Climate Zone</label>
-                        <input class="form-control" readonly style="text-align: center; width: 100px;" id="climateZone"></input>
+                        <label style="text-align: center" for="climateZone_2008">Climate Zone: H1 4th Edition</label>
                     </div>
                 </div>
                 <div class="col-2">
                     <div>
-                        <button id="addElement" style="margin-top: 40px" class="float-right btn btn-secondary">+</button>
+                        <label style="text-align: center" for="climateZone">Climate Zone: H1 5th Edition</label>
                     </div>
                 </div>
             </div>
-            <div class="form-group form-check">
-                <input type="checkbox" class="form-check-input" id="dateConsent">
-                <label class="form-check-label" for="dateConsent">
-                    Building consent will be submitted on or after 2 November 2023
-                </label>
-            </div>  
+            <div class="row">
+                <div class="col-6">
+                    <select class="form-control" name="pickAuthority" id="pickAuthority">
+                    </select>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <input class="form-control" readonly style="text-align: center; width: 100px;" id="climateZone_2008"></input>
+                    </div>
+                </div>
+                <div class="col-2">
+                    <div>
+                        <input class="form-control" readonly style="text-align: center; width: 100px;" id="climateZone"></input>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-10">
+                    <div class="form-check">
+                        <input checked class="form-check-input" type="radio" name="flexRadioDefault" id="dateConsent_3Nov2022">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Building consent will be submitted on or after 3 November 2022 but before 1 May 2023
+                        </label>
+                      </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="dateConsent_1May2023">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Building consent will be submitted on or after 1 May 2023 but before 2 November 2023
+                        </label>
+                      </div>
+                    <div class="form-check">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="dateConsent_2Nov2023">
+                        <label class="form-check-label" for="flexRadioDefault1">
+                            Building consent will be submitted on or after 2 November 2023
+                        </label>
+                      </div>        
+                </div>
+                <div class="col-2" style="display: flex; flex-direction: row-reverse; align-items: flex-end;">
+                    <button id="addElement" class="float-right btn btn-secondary">+</button>
+                </div>
+            </div>
             <table class="table table-striped table-bordered table-sm">
                 <thead>
                     <tr>
@@ -229,142 +265,164 @@
     
 <script>
     let climateZoneData = {
-        'Ashburton District Council': '5', 
-        'Auckland Council': '1', 
-        'Buller District Council': '4', 
-        'Carterton District Council': '4', 
-        "Central Hawke’s Bay District Council": '2', 
-        'Central Otago District Council': '6', 
-        'Chatham Islands Council': '3', 
-        'Christchurch City Council': '5', 
-        'Clutha District Council': '5', 
-        'Dunedin City Council': '5', 
-        'Far North District Council': '1', 
-        'Gisborne District Council': '2', 
-        'Gore District Council': '6', 
-        'Grey District Council': '4', 
-        'Hamilton City Council': '2', 
-        'Hastings District Council': '2', 
-        'Hauraki District Council': '2', 
-        'Horowhenua District Council': '3', 
-        'Hurunui District Council': '5', 
-        'Hutt City Council': '3', 
-        'Invercargill City Council': '3', 
-        'Kaikōura District Council': '3', 
-        'Kaipara District Council': '3', 
-        'Kapiti Coast District Council': '3', 
-        'Kawerau District Council': '1', 
-        'Mackenzie District Council': '6', 
-        'Manawatu District Council': '3', 
-        'Marlborough District Council': '3', 
-        'Masterton District Council': '4', 
-        'Matamata–Piako District Council': '2', 
-        'Napier City Council': '2', 
-        'Nelson City Council': '3', 
-        'New Plymouth District Council': '2', 
-        'Ōpōtiki District Council': '1', 
-        'Otorohanga District Council': '2', 
-        'Palmerston North City Council': '3', 
-        'Porirua City Council': '3', 
-        'Queenstown–Lakes District Council': '6', 
-        "Rangitikei District Council (north of 39o50'S (-39.83))": '4', 
-        "Rangitikei District Council (south of 39o50'S (-39.83))": '3', 
-        'Rotorua District Council': '4', 
-        'Ruapehu District Council': '4', 
-        'Selwyn District Council': '5', 
-        'South Taranaki District Council': '2', 
-        'South Waikato District Council': '2', 
-        'South Wairarapa District Council': '4', 
-        'Southland District Council': '6', 
-        'Stratford District Council': '2', 
-        'Tararua District Council': '4', 
-        'Tasman District Council': '3', 
-        'Taupō District Council': '4', 
-        'Tauranga City Council': '1', 
-        'Thames–Coromandel District Council': '1', 
-        'Timaru District Council': '5', 
-        'Upper Hutt City Council': '4', 
-        'Waikato District Council': '2', 
-        'Waimakariri District Council': '5', 
-        'Waimate District Council': '5', 
-        'Waipa District Council': '2', 
-        'Wairoa District Council': '2', 
-        'Waitaki District (true left of the Otekaieke river)': '6', 
-        'Waitaki District (true right of the Otekaieke river)': '5', 
-        'Waitomo District Council': '2', 
-        'Wellington City Council': '3', 
-        'Western Bay of Plenty District Council': '1', 
-        'Westland District Council': '4', 
-        'Whakatane District Council': '1', 
-        'Whanganui District Council': '2', 
-        'Whangarei District Council': '1'
+        'Ashburton District Council': ['3','5'], 
+        'Auckland Council': ['1','1'], 
+        'Buller District Council': ['3','4'], 
+        'Carterton District Council': ['3','4'], 
+        "Central Hawke’s Bay District Council": ['2','2'], 
+        'Central Otago District Council': ['3','6'], 
+        'Chatham Islands Council': ['2','3'], 
+        'Christchurch City Council': ['3','5'], 
+        'Clutha District Council': ['3','5'], 
+        'Dunedin City Council': ['3','5'], 
+        'Far North District Council': ['1','1'], 
+        'Gisborne District Council': ['2','2'], 
+        'Gore District Council': ['3','6'], 
+        'Grey District Council': ['3','4'], 
+        'Hamilton City Council': ['2','2'], 
+        'Hastings District Council': ['2','2'], 
+        'Hauraki District Council': ['1','2'], 
+        'Horowhenua District Council': ['2','3'], 
+        'Hurunui District Council': ['3','5'], 
+        'Hutt City Council': ['2','3'], 
+        'Invercargill City Council': ['3','3'], 
+        'Kaikōura District Council': ['3','3'], 
+        'Kaipara District Council': ['1','3'], 
+        'Kapiti Coast District Council': ['2','3'], 
+        'Kawerau District Council': ['2','1'], 
+        'Mackenzie District Council': ['3','6'], 
+        'Manawatu District Council': ['2','3'], 
+        'Marlborough District Council': ['3','3'], 
+        'Masterton District Council': ['2','4'], 
+        'Matamata–Piako District Council': ['2','2'], 
+        'Napier City Council': ['2','2'], 
+        'Nelson City Council': ['3','3'], 
+        'New Plymouth District Council': ['2','2'], 
+        'Ōpōtiki District Council': ['2','1'], 
+        'Otorohanga District Council': ['2','2'], 
+        'Palmerston North City Council': ['2','3'], 
+        'Porirua City Council': ['2','3'], 
+        'Queenstown–Lakes District Council': ['3','6'], 
+        "Rangitikei District Council (north of 39o50'S (-39.83))": ['2','4'], 
+        "Rangitikei District Council (south of 39o50'S (-39.83))": ['2','3'], 
+        'Rotorua District Council': ['2','4'], 
+        'Ruapehu District Council': ['3','4'], 
+        'Selwyn District Council': ['3','5'], 
+        'South Taranaki District Council': ['2','2'], 
+        'South Waikato District Council': ['2','2'], 
+        'South Wairarapa District Council': ['2','4'], 
+        'Southland District Council': ['3','6'], 
+        'Stratford District Council': ['2','2'], 
+        'Tararua District Council': ['2','4'], 
+        'Tasman District Council': ['3','3'], 
+        'Taupō District Council': ['3','4'], 
+        'Tauranga City Council': ['2','1'],
+        'Thames–Coromandel District Council': ['1','1'], 
+        'Timaru District Council': ['3','5'], 
+        'Upper Hutt City Council': ['2','4'], 
+        'Waikato District Council': ['2','2'], 
+        'Waimakariri District Council': ['3','5'], 
+        'Waimate District Council': ['3','5'], 
+        'Waipa District Council': ['2','2'], 
+        'Wairoa District Council': ['2','2'], 
+        'Waitaki District (true left of the Otekaieke river)': ['3','6'], 
+        'Waitaki District (true right of the Otekaieke river)': ['3','5'], 
+        'Waitomo District Council': ['2','2'], 
+        'Wellington City Council': ['2','3'], 
+        'Western Bay of Plenty District Council': ['2','1'], 
+        'Westland District Council': ['3','4'], 
+        'Whakatane District Council': ['2','1'], 
+        'Whanganui District Council': ['2','2'], 
+        'Whangarei District Council': ['1','1']
     }
 
-
-    let mbieRvalues = {
+    let mbieRvalues_2021 = {
         'Wall': {
-            1: 2.0,
-            2: 2.0,
-            3: 2.0,
-            4: 2.0,
-            5: 2.0,
-            6: 2.0,
+            1: [2.0, 2.0],
+            2: [2.0, 2.0],
+            3: [2.0, 2.0],
+            4: [2.0, 2.0],
+            5: [2.0, 2.0],
+            6: [2.0, 2.0]
         },
         'Roof': {
-            1: 6.6,
-            2: 6.6,
-            3: 6.6,
-            4: 6.6,
-            5: 6.6,
-            6: 6.6,
+            1: [6.6, 6.6],
+            2: [6.6, 6.6],
+            3: [6.6, 6.6],
+            4: [6.6, 6.6],
+            5: [6.6, 6.6],
+            6: [6.6, 6.6]
         },
         'Slab-on-ground floor': {
-            1: 1.5,
-            2: 1.5,
-            3: 1.5,
-            4: 1.5,
-            5: 1.6,
-            6: 1.7,
+            1: [1.5, 1.5],
+            2: [1.5, 1.5],
+            3: [1.5, 1.5],
+            4: [1.5, 1.5],
+            5: [1.6, 1.6],
+            6: [1.7, 1.7]
         },
         'Floor other than slab-on-ground': {
-            1: 2.5,
-            2: 2.5,
-            3: 2.5,
-            4: 2.8,
-            5: 3.0,
-            6: 3.0,
+            1: [2.5, 2.5],
+            2: [2.5, 2.5],
+            3: [2.5, 2.5],
+            4: [2.8, 2.8],
+            5: [3.0, 3.0],
+            6: [3.0, 3.0]
         },
         'Window or glazed door': {
-            1: 0.37,
-            2: 0.37,
-            3: 0.46,
-            4: 0.46,
-            5: 0.50,
-            6: 0.50,
+            1: [0.37, 0.46],
+            2: [0.37, 0.46],
+            3: [0.46, 0.46],
+            4: [0.46, 0.46],
+            5: [0.50, 0.50],
+            6: [0.50, 0.50]
         },
         'Window or door': {
-            1: 0.37,
-            2: 0.37,
-            3: 0.46,
-            4: 0.46,
-            5: 0.50,
-            6: 0.50,
+            1: [0.37, 0.46],
+            2: [0.37, 0.46],
+            3: [0.46, 0.46],
+            4: [0.46, 0.46],
+            5: [0.50, 0.50],
+            6: [0.50, 0.50]
         },
         'Opaque door or panel': {
-            1: 0.37,
-            2: 0.37,
-            3: 0.46,
-            4: 0.46,
-            5: 0.50,
-            6: 0.50,
+            1: [0.37, 0.46],
+            2: [0.37, 0.46],
+            3: [0.46, 0.46],
+            4: [0.46, 0.46],
+            5: [0.50, 0.50],
+            6: [0.50, 0.50]
         },
         'Skylight': {
-            1: 'N/A',
-            2: 'N/A',
-            3: 'N/A',
-            4: 'N/A',
-            5: 'N/A',
-            6: 'N/A',
+            1: ['N/A', 'N/A'],
+            2: ['N/A', 'N/A'],
+            3: ['N/A', 'N/A'],
+            4: ['N/A', 'N/A'],
+            5: ['N/A', 'N/A'],
+            6: ['N/A', 'N/A']
+        }
+    }
+
+    let mbieRvalues_2008 = {
+        'Wall': {
+            1: 1.9,
+            2: 1.9,
+            3: 2.0
+        },
+        'Roof': {
+            1: 2.9,
+            2: 2.9,
+            3: 3.3,
+        },
+        'Slab-on-ground floor': {
+            1: 1.3,
+            2: 1.3,
+            3: 1.3
+        },
+        'Floor other than slab-on-ground': {
+            1: 1.3,
+            2: 1.3,
+            3: 1.3
         }
     }
 
@@ -376,24 +434,12 @@
         authorityList.innerHTML += "<option>" + territorialAuthorities[i] + "</option>"
     }
 
-
     let tableBody = document.getElementById('tableBody')                
 
     function updateRvalues() {
-
-        if (document.getElementById('dateConsent').checked) {
-            mbieRvalues['Window or glazed door'][1] = 0.46;
-            mbieRvalues['Window or glazed door'][2] = 0.46;
-            mbieRvalues['Opaque door or panel'][1] = 0.46;
-            mbieRvalues['Opaque door or panel'][2] = 0.46;
-        } else {
-            mbieRvalues['Window or glazed door'][1] = 0.37;
-            mbieRvalues['Window or glazed door'][2] = 0.37;
-            mbieRvalues['Opaque door or panel'][1] = 0.37;
-            mbieRvalues['Opaque door or panel'][2] = 0.37;           
-        }
     
-        let climateZone = climateZoneData[document.getElementById('pickAuthority').value]
+        let climateZone_2008 = climateZoneData[document.getElementById('pickAuthority').value][0]        
+        let climateZone = climateZoneData[document.getElementById('pickAuthority').value][1]
         let tableBody = document.getElementById('tableBody')
         let refTableBody = document.getElementById('refTableBody')
         var windowAreaTotal = 0.0
@@ -407,6 +453,7 @@
         var refTotalHeatLoss = 0.0
         var verticalGlazingArea = 0.0
     
+        document.getElementById('climateZone_2008').value = climateZone_2008;
         document.getElementById('climateZone').value = climateZone;
     
         for (let i = 0, row; row = tableBody.rows[i]; i++) {
@@ -461,7 +508,17 @@
         for (let i = 0, row; row = refTableBody.rows[i]; i++) {
             let elementType = row.querySelector('.elementType');
             let referenceRvalueCell = row.querySelector('.referenceRvalue');
-            let referenceRvalue = mbieRvalues[elementType.innerHTML][climateZone]
+            if ($('#dateConsent_3Nov2022').prop("checked")) {
+                if (elementType.innerHTML == 'Window or door') {
+                    var referenceRvalue = mbieRvalues_2021[elementType.innerHTML][climateZone][0]
+                } else {
+                    var referenceRvalue = mbieRvalues_2008[elementType.innerHTML][climateZone_2008]
+                }
+            } else if ($('#dateConsent_1May2023').prop("checked")) {
+                var referenceRvalue = mbieRvalues_2021[elementType.innerHTML][climateZone][0]
+            } else if ($('#dateConsent_2Nov2023').prop("checked")) {
+                var referenceRvalue = mbieRvalues_2021[elementType.innerHTML][climateZone][1]        
+            }
     
             referenceRvalueCell.innerHTML = referenceRvalue
     
@@ -597,7 +654,7 @@
         updateRvalues()
     })
 
-    $(document).on('change', '#dateConsent, .proposedRvalue, .proposedArea, #pickAuthority', function() {
+    $(document).on('change', '#dateConsent_3Nov2022, #dateConsent_1May2023, #dateConsent_2Nov2023, .proposedRvalue, .proposedArea, #pickAuthority', function() {
         updateRvalues();
     });
 

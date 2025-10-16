@@ -76,12 +76,7 @@
     <h2>Building Code H1/AS1 Calculation Method</h2>
     <div class="row">
         <div class="col-lg-8">
-            <p>This tool implements the calculation method of the H1/AS1 Fifth Edition - Amendment 1. Please add your building's thermal envelope areas and R-values in the table below. Note that wall and roof areas are 'net' meaning that the area of any windows, doors and skylights must be subtracted.<br>
-                Additional rows can be added with the button at the top-right. 
-                Please set the territorial authority in which the building is to be constructed below. 
-                The climate zone will be looked up automatically.<br>
-                Please also tick when the building will be submitted for building consent. The new H1 changes are being phased and this changes the required R-values.<br>
-            The building is compliant with the calculation method if its heat loss is less than or equal to the reference building heat loss.<br>For building elements with embedded heating systems, the minimum construction R-values shall be determined through the Schedule method. These apply whenever building elements that are part of the thermal envelope include heating systems and may not be reduced by applying the Calculation method. Refer H1/AS1 2.1.1.3.</p>
+            <p>Text as per the attached Word document. Keep the box with "R-values are input as construction R-values..."</p>
         </div>
     </div>
 
@@ -90,11 +85,6 @@
             <div class="row">
                 <div class="col-6" style="display: flex; align-items: flex-end;">
                     <label for="pickAuthority">Territorial Authority</label>
-                </div>
-                <div class="col-2">
-                    <div>
-                        <label style="text-align: center" for="climateZone_2008">Climate Zone: H1 4th Edition</label>
-                    </div>
                 </div>
                 <div class="col-2">
                     <div>
@@ -109,11 +99,6 @@
                 </div>
                 <div class="col-2">
                     <div>
-                        <input class="form-control" readonly style="text-align: center; width: 100px;" id="climateZone_2008"></input>
-                    </div>
-                </div>
-                <div class="col-2">
-                    <div>
                         <input class="form-control" readonly style="text-align: center; width: 100px;" id="climateZone"></input>
                     </div>
                 </div>
@@ -121,15 +106,15 @@
             <div class="row">
                 <div class="col-10">
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="dateConsent_1May2023">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="dateConsentBeforeXNov2025" checked>
                         <label class="form-check-label" for="flexRadioDefault1">
-                            Building consent will be submitted on or after 1 May 2023 but before 2 November 2023
+                            Building consent will be submitted before X November 2025 (H1/AS1, 5th Edition - Amendment 1)
                         </label>
                       </div>
                     <div class="form-check">
-                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="dateConsent_2Nov2023">
+                        <input class="form-check-input" type="radio" name="flexRadioDefault" id="dateConsentAfterXNov2025">
                         <label class="form-check-label" for="flexRadioDefault1">
-                            Building consent will be submitted on or after 2 November 2023
+                            Building consent will be submitted on or after X November 2025 (H1/AS1, 6th Edition)
                         </label>
                       </div>        
                 </div>
@@ -330,70 +315,70 @@
         'Whangarei District Council': ['1','1']
     }
 
-    let mbieRvalues_2021 = {
+    let mbieRvalues_2025 = {
         'Wall': {
-            1: [2.0, 2.0],
-            2: [2.0, 2.0],
-            3: [2.0, 2.0],
-            4: [2.0, 2.0],
-            5: [2.0, 2.0],
-            6: [2.0, 2.0]
+            1: [2.0, 1.6, 1, 1],
+            2: [2.0, 1.6, 1, 1],
+            3: [2.0, 1.6, 1, 1],
+            4: [2.0, 1.6, 1, 1],
+            5: [2.0, 1.6, 1, 1],
+            6: [2.0, 1.6, 1, 1]
         },
         'Roof': {
-            1: [6.6, 6.6],
-            2: [6.6, 6.6],
-            3: [6.6, 6.6],
-            4: [6.6, 6.6],
-            5: [6.6, 6.6],
-            6: [6.6, 6.6]
+            1: [6.6, 6.6, 3.3, 2.6],
+            2: [6.6, 6.6, 3.3, 2.6],
+            3: [6.6, 6.6, 3.3, 2.6],
+            4: [6.6, 6.6, 3.3, 2.6],
+            5: [6.6, 6.6, 3.3, 2.6],
+            6: [6.6, 6.6, 3.3, 2.6]
         },
         'Slab-on-ground floor': {
-            1: [1.5, 1.5],
-            2: [1.5, 1.5],
-            3: [1.5, 1.5],
-            4: [1.5, 1.5],
-            5: [1.6, 1.6],
-            6: [1.7, 1.7]
+            1: [1.5, 1.5, 0.75, 'N/A'],
+            2: [1.5, 1.5, 0.75, 'N/A'],
+            3: [1.5, 1.5, 0.75, 'N/A'],
+            4: [1.5, 1.5, 0.75, 'N/A'],
+            5: [1.6, 1.6, 0.8, 'N/A'],
+            6: [1.7, 1.7, 0.85, 'N/A']
         },
         'Floor other than slab-on-ground': {
-            1: [2.5, 2.5],
-            2: [2.5, 2.5],
-            3: [2.5, 2.5],
-            4: [2.8, 2.8],
-            5: [3.0, 3.0],
-            6: [3.0, 3.0]
+            1: [2.5, 2.5, 1.25, 1.3],
+            2: [2.5, 2.5, 1.25, 1.3],    
+            3: [2.5, 2.5, 1.25, 1.3],
+            4: [2.8, 2.8, 1.4, 1.3],
+            5: [3.0, 3.0, 1.5, 1.3],
+            6: [3.0, 3.0, 1.5, 1.3]
         },
         'Window or glazed door': {
-            1: [0.37, 0.46],
-            2: [0.37, 0.46],
-            3: [0.46, 0.46],
-            4: [0.46, 0.46],
-            5: [0.50, 0.50],
-            6: [0.50, 0.50]
+            1: [0.37, 0.46, 'N/A', 'N/A'],
+            2: [0.37, 0.46, 'N/A', 'N/A'],
+            3: [0.46, 0.46, 'N/A', 'N/A'],
+            4: [0.46, 0.46, 'N/A', 'N/A'],
+            5: [0.50, 0.50, 'N/A', 'N/A'],
+            6: [0.50, 0.50, 'N/A', 'N/A']
         },
         'Window or door': {
-            1: [0.37, 0.46],
-            2: [0.37, 0.46],
-            3: [0.46, 0.46],
-            4: [0.46, 0.46],
-            5: [0.50, 0.50],
-            6: [0.50, 0.50]
+            1: [0.37, 0.46, 'N/A', 'N/A'],
+            2: [0.37, 0.46, 'N/A', 'N/A'],
+            3: [0.46, 0.46, 'N/A', 'N/A'],
+            4: [0.46, 0.46, 'N/A', 'N/A'],
+            5: [0.50, 0.50, 'N/A', 'N/A'],
+            6: [0.50, 0.50, 'N/A', 'N/A']
         },
         'Opaque door or panel': {
-            1: [0.37, 0.46],
-            2: [0.37, 0.46],
-            3: [0.46, 0.46],
-            4: [0.46, 0.46],
-            5: [0.50, 0.50],
-            6: [0.50, 0.50]
+            1: [0.37, 0.46, 'N/A', 'N/A'],
+            2: [0.37, 0.46, 'N/A', 'N/A'],
+            3: [0.46, 0.46, 'N/A', 'N/A'],
+            4: [0.46, 0.46, 'N/A', 'N/A'],
+            5: [0.50, 0.50, 'N/A', 'N/A'],
+            6: [0.50, 0.50, 'N/A', 'N/A']
         },
         'Skylight': {
-            1: ['N/A', 'N/A'],
-            2: ['N/A', 'N/A'],
-            3: ['N/A', 'N/A'],
-            4: ['N/A', 'N/A'],
-            5: ['N/A', 'N/A'],
-            6: ['N/A', 'N/A']
+            1: ['N/A', 'N/A', 'N/A', 'N/A'],
+            2: ['N/A', 'N/A', 'N/A', 'N/A'],
+            3: ['N/A', 'N/A', 'N/A', 'N/A'],
+            4: ['N/A', 'N/A', 'N/A', 'N/A'],
+            5: ['N/A', 'N/A', 'N/A', 'N/A'],
+            6: ['N/A', 'N/A', 'N/A', 'N/A']
         }
     }
 
@@ -408,8 +393,9 @@
     let tableBody = document.getElementById('tableBody')                
 
     function updateRvalues() {
-    
-        let climateZone_2008 = climateZoneData[document.getElementById('pickAuthority').value][0]        
+
+        console.log('Updating R-values')
+            
         let climateZone = climateZoneData[document.getElementById('pickAuthority').value][1]
         let tableBody = document.getElementById('tableBody')
         let refTableBody = document.getElementById('refTableBody')
@@ -424,10 +410,10 @@
         var refTotalHeatLoss = 0.0
         var verticalGlazingArea = 0.0
     
-        document.getElementById('climateZone_2008').value = climateZone_2008;
         document.getElementById('climateZone').value = climateZone;
     
         for (let i = 0, row; row = tableBody.rows[i]; i++) {
+            console.log('Row ', i)
             let proposedRvalue = row.querySelector('.proposedRvalue').value
             let proposedArea = row.querySelector('.proposedArea').value
             let heatLossCell = row.querySelector('.heatLossCell')
@@ -477,12 +463,13 @@
         document.getElementById('windowToWallRatio').innerHTML = windowToWallRatio.toFixed(1) + '%' 
         
         for (let i = 0, row; row = refTableBody.rows[i]; i++) {
+            console.log('Reference Row ', i)
             let elementType = row.querySelector('.elementType');
             let referenceRvalueCell = row.querySelector('.referenceRvalue');
-            if ($('#dateConsent_1May2023').prop("checked")) {
-                var referenceRvalue = mbieRvalues_2021[elementType.innerHTML][climateZone][0]
-            } else if ($('#dateConsent_2Nov2023').prop("checked")) {
-                var referenceRvalue = mbieRvalues_2021[elementType.innerHTML][climateZone][1]        
+            if ($('#dateConsentBeforeXNov2025').prop("checked")) {
+                var referenceRvalue = mbieRvalues_2025[elementType.innerHTML][climateZone][0]
+            } else if ($('#dateConsentAfterXNov2025').prop("checked")) {
+                var referenceRvalue = mbieRvalues_2025[elementType.innerHTML][climateZone][1]
             }
     
             referenceRvalueCell.innerHTML = referenceRvalue
@@ -526,26 +513,35 @@
         //check R-value is greater than half reference R-value
         var rValueCheck = true
         for (let i = 0, row; row = tableBody.rows[i]; i++) {
-            let proposedRvalue = row.querySelector('.proposedRvalue').value
-            let elementType = row.querySelector('.elementType').value;
+            let proposedRvalue = parseFloat(row.querySelector('.proposedRvalue').value)
+            let elementTypeEl = row.querySelector('.elementType');
+            let elementType = elementTypeEl.value;
+            let allowedRvalue;
+            if ($('#dateConsentBeforeXNov2025').prop("checked")) {
+                allowedRvalue = mbieRvalues_2025[elementType][climateZone][2]
+                console.log('Allowed R-value: ', allowedRvalue)
+            } else if ($('#dateConsentAfterXNov2025').prop("checked")) {
+                allowedRvalue = mbieRvalues_2025[elementType][climateZone][3]
+                console.log('Allowed R-value: ', allowedRvalue)
+            }
             let proposedRvalueCell = row.querySelector('.proposedRvalue');
-                if (proposedRvalueCell.nextSibling.nextSibling) {
-                    proposedRvalueCell.nextSibling.nextSibling.remove();
-                }
-            if (elementType == 'Wall' ||
-                elementType == 'Floor' ||
+            if (proposedRvalueCell.nextSibling && proposedRvalueCell.nextSibling.nextSibling) {
+                proposedRvalueCell.nextSibling.nextSibling.remove();
+            }
+            // Only check relevant element types and when allowedRvalue is numeric
+            if ((elementType == 'Wall' ||
                 elementType == 'Slab-on-ground floor' ||
                 elementType == 'Floor other than slab-on-ground' ||
-                elementType == 'Roof') {
+                elementType == 'Roof') && allowedRvalue !== 'N/A') {
  
                 for (let x = 0, refrow; refrow = refTableBody.rows[x]; x++) {
                     let refElementType = refrow.querySelector('.elementType').innerHTML;
                     if (refElementType == elementType) {
                         referenceRvalue = refrow.querySelector('.referenceRvalue').innerHTML;
-                        if (proposedRvalue < 0.5 * referenceRvalue && proposedRvalue != 0) {
+                        if (!isNaN(allowedRvalue) && proposedRvalue < parseFloat(allowedRvalue) && proposedRvalue != 0) {
                             rValueCheck = false
                             let warning = document.createElement("p");
-                            warning.innerHTML = "Value must be greater than 50% of reference R-value";
+                            warning.innerHTML = "Value must be greater than " + allowedRvalue;
                             warning.style.cssText = 'color: red; padding-top: 5px; margin: 0px'
                             proposedRvalueCell.parentElement.append(warning)
                         }
@@ -554,7 +550,7 @@
             }
         }
         if (rValueCheck == false) {
-            document.getElementById('compliant').innerHTML = 'No. All wall, roof and floor R-values must be at least 50% of the reference R-value.'
+            document.getElementById('compliant').innerHTML = 'No. All wall, roof and floor R-values must meet minimum R-values. See H1/AS1 for details.'
         } else {
             if (windowToWallRatio > 40) {
                 document.getElementById('compliant').innerHTML = 'N/A. The window-to-wall ratio must be less than 40%.'
@@ -619,7 +615,7 @@
         updateRvalues()
     })
 
-    $(document).on('change', '#dateConsent_3Nov2022, #dateConsent_1May2023, #dateConsent_2Nov2023, .proposedRvalue, .proposedArea, #pickAuthority', function() {
+    $(document).on('change', '#dateConsentBeforeXNov2025, #dateConsentAfterXNov2025, .proposedRvalue, .proposedArea, #pickAuthority', function() {
         updateRvalues();
     });
 

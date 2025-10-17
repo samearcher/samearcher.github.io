@@ -393,8 +393,6 @@
     let tableBody = document.getElementById('tableBody')                
 
     function updateRvalues() {
-
-        console.log('Updating R-values')
             
         let climateZone = climateZoneData[document.getElementById('pickAuthority').value][1]
         let tableBody = document.getElementById('tableBody')
@@ -413,7 +411,6 @@
         document.getElementById('climateZone').value = climateZone;
     
         for (let i = 0, row; row = tableBody.rows[i]; i++) {
-            console.log('Row ', i)
             let proposedRvalue = row.querySelector('.proposedRvalue').value
             let proposedArea = row.querySelector('.proposedArea').value
             let heatLossCell = row.querySelector('.heatLossCell')
@@ -463,7 +460,6 @@
         document.getElementById('windowToWallRatio').innerHTML = windowToWallRatio.toFixed(1) + '%' 
         
         for (let i = 0, row; row = refTableBody.rows[i]; i++) {
-            console.log('Reference Row ', i)
             let elementType = row.querySelector('.elementType');
             let referenceRvalueCell = row.querySelector('.referenceRvalue');
             if ($('#dateConsentBeforeXNov2025').prop("checked")) {
@@ -519,10 +515,8 @@
             let allowedRvalue;
             if ($('#dateConsentBeforeXNov2025').prop("checked")) {
                 allowedRvalue = mbieRvalues_2025[elementType][climateZone][2]
-                console.log('Allowed R-value: ', allowedRvalue)
             } else if ($('#dateConsentAfterXNov2025').prop("checked")) {
                 allowedRvalue = mbieRvalues_2025[elementType][climateZone][3]
-                console.log('Allowed R-value: ', allowedRvalue)
             }
             let proposedRvalueCell = row.querySelector('.proposedRvalue');
             if (proposedRvalueCell.nextSibling && proposedRvalueCell.nextSibling.nextSibling) {

@@ -83,24 +83,22 @@
     <div class="row">
         <div class="col-lg-8" style="display: table;">
             <div class="row">
-                <div class="col-6" style="display: flex; align-items: flex-end;">
+                <div class="col-9">
                     <label for="pickAuthority">Territorial Authority</label>
                 </div>
                 <div class="col-2">
                     <div>
-                        <label style="text-align: center" for="climateZone">Climate Zone: H1 5th Edition</label>
+                        <label style="text-align: center; width: 100px;" for="climateZone">Climate Zone</label>
                     </div>
                 </div>
             </div>
             <div class="row">
-                <div class="col-6">
+                <div class="col-9">
                     <select class="form-control" name="pickAuthority" id="pickAuthority">
                     </select>
                 </div>
                 <div class="col-2">
-                    <div>
                         <input class="form-control" readonly style="text-align: center; width: 100px;" id="climateZone"></input>
-                    </div>
                 </div>
             </div>
             <div class="row">
@@ -108,13 +106,13 @@
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="flexRadioDefault" id="dateConsentBeforeXNov2025" checked>
                         <label class="form-check-label" for="flexRadioDefault1">
-                            Building consent will be submitted before X November 2025 (H1/AS1, 5th Edition - Amendment 1)
+                            H1/AS1 5th Edition Amendment 1 (can be used for building consents submitted until X November 2026)
                         </label>
                       </div>
                     <div class="form-check">
                         <input class="form-check-input" type="radio" name="flexRadioDefault" id="dateConsentAfterXNov2025">
                         <label class="form-check-label" for="flexRadioDefault1">
-                            Building consent will be submitted on or after X November 2025 (H1/AS1, 6th Edition)
+                            H1/AS1 6th Edition (can be used for building consents submitted from X November 2025)
                         </label>
                       </div>        
                 </div>
@@ -510,13 +508,14 @@
         var rValueCheck = true
         for (let i = 0, row; row = tableBody.rows[i]; i++) {
             let proposedRvalue = parseFloat(row.querySelector('.proposedRvalue').value)
+            let proposedArea = parseFloat(row.querySelector('.proposedArea').value)
             let elementTypeEl = row.querySelector('.elementType');
             let elementType = elementTypeEl.value;
             let allowedRvalue;
             if ($('#dateConsentBeforeXNov2025').prop("checked")) {
-                allowedRvalue = mbieRvalues_2025[elementType][climateZone][2]
+                allowedRvalue = parseFloat(mbieRvalues_2025[elementType][climateZone][2])
             } else if ($('#dateConsentAfterXNov2025').prop("checked")) {
-                allowedRvalue = mbieRvalues_2025[elementType][climateZone][3]
+                allowedRvalue = parseFloat(mbieRvalues_2025[elementType][climateZone][3])
             }
             let proposedRvalueCell = row.querySelector('.proposedRvalue');
             if (proposedRvalueCell.nextSibling && proposedRvalueCell.nextSibling.nextSibling) {
@@ -532,11 +531,11 @@
                     let refElementType = refrow.querySelector('.elementType').innerHTML;
                     if (refElementType == elementType) {
                         referenceRvalue = refrow.querySelector('.referenceRvalue').innerHTML;
-                        if (!isNaN(allowedRvalue) && proposedRvalue < parseFloat(allowedRvalue) && proposedRvalue != 0) {
+                        if (!isNaN(allowedRvalue) && proposedRvalue < allowedRvalue && proposedArea > 0) {
                             rValueCheck = false
                             let warning = document.createElement("p");
-                            warning.innerHTML = "Value must be greater than " + allowedRvalue;
-                            warning.style.cssText = 'color: red; padding-top: 5px; margin: 0px'
+                            warning.innerHTML = "Value must be greater than or equal to R" + allowedRvalue.toFixed(1);
+                            warning.style.cssText = 'text-align: center; color: red; padding-top: 5px; margin: 0px'
                             proposedRvalueCell.parentElement.append(warning)
                         }
                     }

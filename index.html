@@ -58,7 +58,7 @@
     }
 
     #referenceTable {
-        margin-top: 140px;
+        margin-top: 200px;
     }
     @media (max-width: 1079px) {
         #referenceTable {
@@ -461,9 +461,9 @@
             let elementType = row.querySelector('.elementType');
             let referenceRvalueCell = row.querySelector('.referenceRvalue');
             if ($('#dateConsentBeforeXNov2025').prop("checked")) {
-                var referenceRvalue = mbieRvalues_2025[elementType.innerHTML][climateZone][0]
+                var referenceRvalue = mbieRvalues_2025[elementType.innerHTML][climateZone][0].toFixed(1)
             } else if ($('#dateConsentAfterXNov2025').prop("checked")) {
-                var referenceRvalue = mbieRvalues_2025[elementType.innerHTML][climateZone][1]
+                var referenceRvalue = mbieRvalues_2025[elementType.innerHTML][climateZone][1].toFixed(1)    
             }
     
             referenceRvalueCell.innerHTML = referenceRvalue
